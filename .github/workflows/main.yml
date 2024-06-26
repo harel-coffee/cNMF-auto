@@ -32,11 +32,11 @@ jobs:
 
     - name: Initialize CodeQL
       run: |
-        codeql/codeql init --languages=${{ matrix.language }}
+        /usr/local/codeql/codeql init --languages=${{ matrix.language }}
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
 
     - name: Perform CodeQL Analysis
       run: |
-        codeql/codeql analyze --category="/language:${{ matrix.language }}" ./over_sampling.ql ./feature_selection.ql
+        /usr/local/codeql/codeql analyze --category="/language:${{ matrix.language }}" ./over_sampling.ql ./feature_selection.ql
