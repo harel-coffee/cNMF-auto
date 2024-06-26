@@ -28,15 +28,20 @@ jobs:
 
     - name: Set up CodeQL CLI
       run: |
-        sudo cp -r codeql/* /usr/local/
+        sudo cp -r codeql/* /usr/local/bin/
 
     - name: Initialize CodeQL
       run: |
-        /usr/local/codeql/codeql init --languages=${{ matrix.language }}
+        /usr/local/bin/codeql database create codeql-database --language=python --source-root=.
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
 
     - name: Perform CodeQL Analysis
       run: |
-        /usr/local/codeql/codeql analyze --category="/language:${{ matrix.language }}" ./over_sampling.ql ./feature_selection.ql
+        /usr/local/bin/codeql database analyze codeql-database ./over_sampling.ql ./feature_selection.ql --format=sarif-latest --output=results.sarif
+
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
