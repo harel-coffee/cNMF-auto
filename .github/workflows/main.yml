@@ -23,8 +23,8 @@ jobs:
 
     - name: Download CodeQL CLI
       run: |
-        curl -L -o codeql.zip https://github.com/github/codeql-cli-binaries/releases/download/v2.15.5/codeql.zip
-        unzip codeql.zip -d codeql
+        curl -L -o codeql-linux64.zip https://github.com/github/codeql-cli-binaries/releases/download/v2.15.5/codeql-linux64.zip
+        unzip codeql-linux64.zip -d codeql
 
     - name: Set up CodeQL CLI
       run: |
