@@ -5,8 +5,8 @@ on: [push, pull_request]
 jobs:
   analyze:
     name: Analyze
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
     permissions:
       actions: read
       contents: read
@@ -21,25 +21,22 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - run: pip install jupytext
-    - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-    - name: List files in the repository
+    - name: Download CodeQL CLI
       run: |
-        ls ${{ github.workspace }}
-    - run: find . -maxdepth 10 -name \*.ipynb -exec jupytext --to py:percent {} \;
-    - name: Copy leakage.ql from public repository
+        curl -L -o codeql.zip https://github.com/github/codeql-cli-binaries/releases/download/v2.15.5/codeql.zip
+        unzip codeql.zip -d codeql
+
+    - name: Set up CodeQL CLI
       run: |
-        curl -o ${{ github.workspace }}/over_sampling.ql https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/over_sampling.ql
-        curl -o ${{ github.workspace }}/feature_selection.ql https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/feature_selection.ql
-        curl -o ${{ github.workspace }}/qlpack.yml https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/qlpack.yml
+        sudo cp -r codeql/* /usr/local/
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@codeql-cli/v2.17.0
-      with:
-        languages: ${{ matrix.language }}
-        queries: ./over_sampling.ql,./feature_selection.ql
+      run: |
+        codeql/codeql init --languages=${{ matrix.language }}
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@codeql-cli/v2.17.0
-      with:
-        category: "/language:${{matrix.language}}"
+      run: |
+        codeql/codeql analyze --category="/language:${{ matrix.language }}" ./over_sampling.ql ./feature_selection.ql
