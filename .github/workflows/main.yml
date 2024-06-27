@@ -42,6 +42,8 @@ jobs:
     - name: Create codeql-queries directory
       run: |
         mkdir -p ${{ github.workspace }}/codeql-queries
+        mkdir -p ${{ github.workspace }}/codeql-queries/codeql-python
+        mkdir -p ${{ github.workspace }}/codeql-queries/codeql-python-all
 
     - name: Download query files
       run: |
@@ -51,7 +53,6 @@ jobs:
 
     - name: Download Python Queries and All Packs
       run: |
-        mkdir -p ${{ github.workspace }}/codeql-queries/codeql-python
         curl -L -o ${{ github.workspace }}/codeql-queries/codeql-python/ql.tar.gz https://github.com/github/codeql/tarball/codeql-cli/v2.15.5/python/ql/src
         curl -L -o ${{ github.workspace }}/codeql-queries/codeql-python-all/ql.tar.gz https://github.com/github/codeql/tarball/codeql-cli/v2.15.5/python/ql/lib
         tar -xzvf ${{ github.workspace }}/codeql-queries/codeql-python/ql.tar.gz -C ${{ github.workspace }}/codeql-queries/codeql-python
