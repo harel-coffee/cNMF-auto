@@ -42,8 +42,6 @@ jobs:
     - name: Create codeql-queries directory
       run: |
         mkdir -p ${{ github.workspace }}/codeql-queries
-        mkdir -p ${{ github.workspace }}/codeql-queries/codeql-python
-        mkdir -p ${{ github.workspace }}/codeql-queries/codeql-python-all
 
     - name: Download query files
       run: |
@@ -51,12 +49,11 @@ jobs:
         curl -o ${{ github.workspace }}/codeql-queries/feature_selection.ql https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/feature_selection.ql
         curl -o ${{ github.workspace }}/codeql-queries/qlpack.yml https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/qlpack-gpt.yml
 
-    - name: Download Python Queries and All Packs
+    - name: Download Python Queries
       run: |
-        curl -L -o ${{ github.workspace }}/codeql-queries/codeql-python/ql.tar.gz https://github.com/github/codeql/tarball/codeql-cli/v2.15.5/python/ql/src
-        curl -L -o ${{ github.workspace }}/codeql-queries/codeql-python-all/ql.tar.gz https://github.com/github/codeql/tarball/codeql-cli/v2.15.5/python/ql/lib
-        tar -xzvf ${{ github.workspace }}/codeql-queries/codeql-python/ql.tar.gz -C ${{ github.workspace }}/codeql-queries/codeql-python
-        tar -xzvf ${{ github.workspace }}/codeql-queries/codeql-python-all/ql.tar.gz -C ${{ github.workspace }}/codeql-queries/codeql-python-all
+        mkdir -p ${{ github.workspace }}/codeql-queries/codeql-python
+        curl -L -o ${{ github.workspace }}/codeql-queries/codeql-python/queries.zip https://github.com/github/codeql/archive/refs/heads/codeql-cli/v2.15.5.zip
+        unzip ${{ github.workspace }}/codeql-queries/codeql-python/queries.zip -d ${{ github.workspace }}/codeql-queries/codeql-python
 
     - name: Install CodeQL packs
       run: |
