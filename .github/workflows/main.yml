@@ -49,6 +49,14 @@ jobs:
         curl -o ${{ github.workspace }}/codeql-queries/feature_selection.ql https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/feature_selection.ql
         curl -o ${{ github.workspace }}/codeql-queries/qlpack.yml https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/qlpack-gpt.yml
 
+    - name: Download Python Queries and All Packs
+      run: |
+        mkdir -p ${{ github.workspace }}/codeql-queries/codeql-python
+        curl -L -o ${{ github.workspace }}/codeql-queries/codeql-python/ql.tar.gz https://github.com/github/codeql/tarball/codeql-cli/v2.15.5/python/ql/src
+        curl -L -o ${{ github.workspace }}/codeql-queries/codeql-python-all/ql.tar.gz https://github.com/github/codeql/tarball/codeql-cli/v2.15.5/python/ql/lib
+        tar -xzvf ${{ github.workspace }}/codeql-queries/codeql-python/ql.tar.gz -C ${{ github.workspace }}/codeql-queries/codeql-python
+        tar -xzvf ${{ github.workspace }}/codeql-queries/codeql-python-all/ql.tar.gz -C ${{ github.workspace }}/codeql-queries/codeql-python-all
+
     - name: Install CodeQL packs
       run: |
         cd ${{ github.workspace }}/codeql-queries && /usr/local/codeql/codeql pack install
