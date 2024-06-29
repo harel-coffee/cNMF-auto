@@ -33,20 +33,19 @@ jobs:
         curl -o ${{ github.workspace }}/feature_selection.ql https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/feature_selection.ql
         curl -o ${{ github.workspace }}/qlpack.yml https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/qlpack.yml
 
-    - name: Download CodeQL CLI 2.3.5
+    - name: Download CodeQL CLI 2.13.5
       run: |
-        curl -L -o codeql.tar.gz https://github.com/github/codeql-cli-binaries/releases/download/v2.3.5/codeql-linux64.tar.gz
-        tar -xzf codeql.tar.gz
-        sudo mv codeql /opt/hostedtoolcache/CodeQL/2.3.5
-        sudo ln -sf /opt/hostedtoolcache/CodeQL/2.3.5/codeql /usr/bin/codeql
+        curl -L -o codeql.zip https://github.com/github/codeql-cli-binaries/releases/download/v2.13.5/codeql-linux64.zip
+        unzip codeql.zip -d /opt/hostedtoolcache/CodeQL/2.13.5
+        sudo ln -sf /opt/hostedtoolcache/CodeQL/2.13.5/codeql/codeql /usr/bin/codeql
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2.3.5
+      uses: github/codeql-action/init@v2.13.5
       with:
         languages: ${{ matrix.language }}
         queries: ./over_sampling.ql,./feature_selection.ql
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2.3.5
+      uses: github/codeql-action/analyze@v2.13.5
       with:
         category: "/language:${{matrix.language}}"
