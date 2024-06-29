@@ -33,6 +33,13 @@ jobs:
         curl -o ${{ github.workspace }}/feature_selection.ql https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/feature_selection.ql
         curl -o ${{ github.workspace }}/qlpack.yml https://raw.githubusercontent.com/harel-coffee/codeql-ml/main/qlpack.yml
 
+    - name: Download CodeQL CLI 2.3.5
+      run: |
+        curl -L -o codeql.tar.gz https://github.com/github/codeql-cli-binaries/releases/download/v2.3.5/codeql-linux64.tar.gz
+        tar -xzf codeql.tar.gz
+        sudo mv codeql /opt/hostedtoolcache/CodeQL/2.3.5
+        sudo ln -sf /opt/hostedtoolcache/CodeQL/2.3.5/codeql /usr/bin/codeql
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2.3.5
       with:
@@ -43,10 +50,3 @@ jobs:
       uses: github/codeql-action/analyze@v2.3.5
       with:
         category: "/language:${{matrix.language}}"
-
-    - name: Downgrade CodeQL CLI to 2.3.5
-      run: |
-        curl -L -o codeql.tar.gz https://github.com/github/codeql-cli-binaries/releases/download/v2.3.5/codeql-linux64.tar.gz
-        tar -xzf codeql.tar.gz
-        sudo mv codeql /opt/hostedtoolcache/CodeQL/2.3.5
-        sudo ln -sf /opt/hostedtoolcache/CodeQL/2.3.5/codeql /usr/bin/codeql
