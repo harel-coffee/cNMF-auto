@@ -64,6 +64,8 @@ jobs:
 
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         queries: ./over_sampling.ql,./feature_selection.ql
+        tools: https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.13.5/codeql-bundle-linux64.tar.gz
+
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
